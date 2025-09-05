@@ -30,13 +30,43 @@ export const SpotifyPlayer = ({ onClose }: SpotifyPlayerProps) => {
       image: "/songs/image4.jpg",
       duration: 240,
       src: "/songs/song4.mp3"
+    },
+    {
+      title: "Sunflower",
+      artist: "Post Malone, Swae Lee",
+      album: "Spider-Man: Into the Spider-Verse",
+      image: "/songs/image1.jpg",
+      duration: 180,
+      src: "/songs/song1.mp3"
+    },
+    {
+      title: "End of Beginning",
+      artist: "Joe Keery",
+      album: "Single (2022)",
+      image: "/songs/image2.jpg",
+      duration: 210,
+      src: "/songs/song2.mp3"
+    },
+    {
+      title: "I Can't Fit In",
+      artist: "Marino",
+      album: "Single (2025)",
+      image: "/songs/image3.jpg",
+      duration: 185,
+      src: "/songs/song3.mp3"
     }
   ];
   const [trackIndex, setTrackIndex] = useState(0);
   const currentSong = playlist[trackIndex];
   
-  const goNext = () => setCurrentTime(0);
-  const goPrev = () => setCurrentTime(0);
+  const goNext = () => {
+    setTrackIndex((i) => (i + 1) % playlist.length);
+    setCurrentTime(0);
+  };
+  const goPrev = () => {
+    setTrackIndex((i) => (i - 1 + playlist.length) % playlist.length);
+    setCurrentTime(0);
+  };
 
   // Sync audio element with current track
   useEffect(() => {
