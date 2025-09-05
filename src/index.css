@@ -155,6 +155,30 @@
     @apply border-border;
   }
 
+  /* Hide scrollbars but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Enable hover effects on mobile devices */
+  @media (hover: none) and (pointer: coarse) {
+    /* Make hover states work on touch devices */
+    *:hover {
+      /* Allow hover effects to work on touch */
+    }
+    
+    /* Ensure buttons respond to touch hover */
+    button:hover,
+    .dock-item:hover,
+    .desktop-icon:hover {
+      /* Hover effects will work when touched */
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;

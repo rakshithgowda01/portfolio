@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CardContainer, CardBody, CardItem } from '@/components/ui/3d-card';
 import { SeriesAnimeExpandable } from './SeriesAnimeExpandable';
@@ -11,14 +11,17 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSeriesAnime, setShowSeriesAnime] = useState(false);
   const [currentView, setCurrentView] = useState<'main' | 'series' | 'anime'>('main');
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const cardWrapperRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
 
-  // Sample data for Series - you can provide the actual list
+  // Your Series Collection
   const seriesCards = [
     {
       title: "Breaking Bad",
       description: "Crime Drama Series",
-      src: "/songs/series.jpg",
+      src: "/songs/series1.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
@@ -51,7 +54,7 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
     {
       title: "Game of Thrones",
       description: "Fantasy Drama Series",
-      src: "/songs/series.jpg",
+      src: "/songs/series2.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
@@ -84,7 +87,7 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
     {
       title: "Stranger Things",
       description: "Supernatural Horror Series",
-      src: "/songs/series.jpg",
+      src: "/songs/series3.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
@@ -115,33 +118,165 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
       ),
     },
     {
-      title: "The Office",
-      description: "Mockumentary Comedy Series",
-      src: "/songs/series.jpg",
+      title: "All of Us Are Dead",
+      description: "Zombie Horror Series",
+      src: "/songs/series4.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
         <div>
           <p className="mb-4">
-            The Office is an American mockumentary sitcom television series that depicts the everyday work lives 
-            of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company.
+            All of Us Are Dead is a South Korean coming-of-age zombie apocalypse horror streaming television series. 
+            The series follows a group of high school students trapped in their school during a zombie outbreak.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>1 Season</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>12 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>2022-Present</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+              <span>IMDb: 7.1/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Wednesday",
+      description: "Supernatural Comedy Series",
+      src: "/songs/series5.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Wednesday is an American coming-of-age supernatural comedy horror television series based on the character 
+            Wednesday Addams from The Addams Family. It follows Wednesday's years as a student at Nevermore Academy.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full"></span>
+              <span>1 Season</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full"></span>
+              <span>8 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full"></span>
+              <span>2022-Present</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full"></span>
+              <span>IMDb: 8.1/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Outer Banks",
+      description: "Adventure Mystery Series",
+      src: "/songs/series6.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Outer Banks is an American action-adventure mystery teen drama television series. The show follows a group 
+            of teenagers in the Outer Banks of North Carolina who discover a treasure map and get caught up in a dangerous adventure.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>9 Seasons</span>
+              <span>3 Seasons</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>201 Episodes</span>
+              <span>30 Episodes</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>2005-2013</span>
+              <span>2020-Present</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>IMDb: 8.9/10</span>
+              <span>IMDb: 7.5/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Dark",
+      description: "Sci-Fi Thriller Series",
+      src: "/songs/series7.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Dark is a German science fiction thriller television series. The story follows characters from the fictional 
+            town of Winden as they pursue the truth in the aftermath of a child's disappearance.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>3 Seasons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>26 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>2017-2020</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>IMDb: 8.7/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "From",
+      description: "Supernatural Horror Series",
+      src: "/songs/series8.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            From is an American horror television series that follows the residents of a mysterious town in middle America 
+            that traps all those who enter. The residents must try to survive and escape from the monsters that come out at night.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>2 Seasons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>20 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>2022-Present</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>IMDb: 7.8/10</span>
             </div>
           </div>
         </div>
@@ -149,12 +284,78 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
     },
   ];
 
-  // Sample data for Anime - you can provide the actual list
+  // Your Anime Collection
   const animeCards = [
+    {
+      title: "One Piece",
+      description: "Adventure Shounen Anime",
+      src: "/songs/anime1.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            One Piece is a Japanese manga series written and illustrated by Eiichiro Oda. 
+            It follows the adventures of Monkey D. Luffy, a boy whose body gained the properties of rubber after unintentionally eating a Devil Fruit.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>20+ Seasons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>1000+ Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>1999-Present</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>IMDb: 9.0/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Naruto",
+      description: "Ninja Adventure Anime",
+      src: "/songs/anime2.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Naruto is a Japanese manga series written and illustrated by Masashi Kishimoto. 
+            It tells the story of Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>9 Seasons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>220 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>2002-2007</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span>IMDb: 8.4/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
     {
       title: "Attack on Titan",
       description: "Action Fantasy Anime",
-      src: "/songs/anime.jpg",
+      src: "/songs/anime3.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
@@ -185,32 +386,32 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
       ),
     },
     {
-      title: "Demon Slayer",
-      description: "Supernatural Action Anime",
-      src: "/songs/anime.jpg",
+      title: "Haikyuu!!",
+      description: "Sports Anime",
+      src: "/songs/anime4.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
         <div>
           <p className="mb-4">
-            Demon Slayer: Kimetsu no Yaiba is a Japanese manga series written and illustrated by Koyoharu Gotouge. 
-            It follows teenage Tanjiro Kamado, who strives to become a demon slayer after his family was slaughtered.
+            Haikyuu!! is a Japanese manga series written and illustrated by Haruichi Furudate. 
+            The story follows Shoyo Hinata, a boy determined to become a great volleyball player despite his small stature.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-              <span>3 Seasons</span>
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span>4 Seasons</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-              <span>44 Episodes</span>
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span>85 Episodes</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-              <span>2019-Present</span>
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span>2014-2020</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
               <span>IMDb: 8.7/10</span>
             </div>
           </div>
@@ -218,32 +419,65 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
       ),
     },
     {
-      title: "One Piece",
-      description: "Adventure Shounen Anime",
-      src: "/songs/anime.jpg",
+      title: "Bleach",
+      description: "Supernatural Action Anime",
+      src: "/songs/anime5.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
         <div>
           <p className="mb-4">
-            One Piece is a Japanese manga series written and illustrated by Eiichiro Oda. 
-            It has been serialized in Shueisha's Weekly Shōnen Jump magazine since July 1997.
+            Bleach is a Japanese manga series written and illustrated by Tite Kubo. 
+            It follows the adventures of Ichigo Kurosaki, a teenager with the ability to see ghosts who becomes a Soul Reaper.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <span>20+ Seasons</span>
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span>16 Seasons</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <span>1000+ Episodes</span>
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span>366 Episodes</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <span>1999-Present</span>
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span>2004-2012</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span>IMDb: 8.2/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Death Note",
+      description: "Psychological Thriller Anime",
+      src: "/songs/anime6.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Death Note is a Japanese manga series written by Tsugumi Ohba and illustrated by Takeshi Obata. 
+            The story follows Light Yagami, a high school student who discovers a supernatural notebook that allows him to kill anyone.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>1 Season</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>37 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
+              <span>2006-2007</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
               <span>IMDb: 9.0/10</span>
             </div>
           </div>
@@ -251,33 +485,66 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
       ),
     },
     {
-      title: "Naruto",
-      description: "Ninja Adventure Anime",
-      src: "/songs/anime.jpg",
+      title: "Tokyo Revengers",
+      description: "Time Travel Action Anime",
+      src: "/songs/anime7.jpg",
       ctaText: "Watch",
       ctaLink: "#",
       content: () => (
         <div>
           <p className="mb-4">
-            Naruto is a Japanese manga series written and illustrated by Masashi Kishimoto. 
-            It tells the story of Naruto Uzumaki, a young ninja who seeks recognition from his peers.
+            Tokyo Revengers is a Japanese manga series written and illustrated by Ken Wakui. 
+            It follows Takemichi Hanagaki, a 26-year-old who discovers he can time travel and decides to save his ex-girlfriend.
           </p>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>9 Seasons</span>
+              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+              <span>2 Seasons</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>220 Episodes</span>
+              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+              <span>37 Episodes</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>2002-2007</span>
+              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+              <span>2021-Present</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-              <span>IMDb: 8.4/10</span>
+              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+              <span>IMDb: 8.1/10</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Dr. Stone",
+      description: "Sci-Fi Adventure Anime",
+      src: "/songs/anime8.jpg",
+      ctaText: "Watch",
+      ctaLink: "#",
+      content: () => (
+        <div>
+          <p className="mb-4">
+            Dr. Stone is a Japanese manga series written by Riichiro Inagaki and illustrated by Boichi. 
+            It follows Senku Ishigami, a scientific genius who plans to rebuild civilization after humanity was mysteriously petrified.
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+              <span>3 Seasons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+              <span>47 Episodes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+              <span>2019-Present</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+              <span>IMDb: 8.2/10</span>
             </div>
           </div>
         </div>
@@ -285,24 +552,48 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
     },
   ];
 
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        const el = cardWrapperRef.current;
-        if (!el) return;
-        if (!el.contains(e.target as Node)) {
-          onClose && onClose();
-        }
-      }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.25, type: "spring", stiffness: 260, damping: 22 }}
+      className="fixed inset-0 z-50"
+      style={{ pointerEvents: 'auto' }}
     >
-      <div ref={cardWrapperRef}>
+      {/* Invisible backdrop to capture outside clicks, no blur */}
+      <div className="absolute inset-0" />
+      <div ref={cardWrapperRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <motion.div 
-          className={`transition-all duration-300 ease-in-out transform -translate-y-[30vh] md:-translate-y-[20vh] ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-80 h-[500px] md:w-[600px] md:h-[600px]'} bg-white rounded-lg shadow-2xl border border-gray-300`}
+          ref={dragRef}
+          drag={!isMinimized}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => {
+            if (isMinimized) return;
+            setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-80 h-[500px] md:w-[600px] md:h-[600px]'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+          style={{ x: position.x, y: position.y }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -335,19 +626,19 @@ export const DontLookWindow = ({ onClose }: DontLookWindowProps) => {
             {!isMinimized && (
               <>
                 {/* macOS Title Bar */}
-                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg">
+                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg cursor-grab active:cursor-grabbing">
                   <div className="flex items-center space-x-2">
                     {/* Traffic Light Buttons */}
                     <button 
                       onClick={onClose}
-                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
+                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 active:bg-red-600 transition-colors"
                     ></button>
                     <button 
                       onClick={() => setIsMinimized(!isMinimized)}
-                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
+                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 active:bg-yellow-600 transition-colors"
                     ></button>
                     <button 
-                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
+                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 active:bg-green-600 transition-colors"
                     ></button>
                   </div>
                   <div className="text-sm font-medium text-gray-600">Don't Look</div>

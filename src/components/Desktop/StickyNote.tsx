@@ -1,10 +1,15 @@
 import { motion, useAnimationControls } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const StickyNote = () => {
   const [position] = useState({ x: 32, y: 60 });
   const [isDragging, setIsDragging] = useState(false);
   const controls = useAnimationControls();
+
+  // Ensure the sticky note is visible on load
+  useEffect(() => {
+    controls.start({ x: 0, y: 0, rotate: -1, opacity: 1, transition: { type: 'spring', stiffness: 450, damping: 32 } });
+  }, [controls]);
 
   const todoItems = [
     "🥗 Maintain a healthy diet & join gym and stay consistent",
@@ -19,7 +24,7 @@ export const StickyNote = () => {
       initial={{ opacity: 0, y: -20, rotate: -1 }}
       animate={controls}
       transition={{ duration: 0.8, delay: 0.3, type: "spring", stiffness: 300 }}
-      className={`absolute w-48 md:w-64 bg-yellow-200 rounded-sm shadow-md select-none z-30 sticky-note ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+      className={`absolute w-40 md:w-64 bg-yellow-200 rounded-sm shadow-md select-none z-30 sticky-note ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} scale-75 md:scale-100`}
       style={{
         left: position.x,
         top: position.y,

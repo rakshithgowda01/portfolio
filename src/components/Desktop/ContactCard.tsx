@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CometCard } from '@/components/ui/comet-card';
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
@@ -12,23 +12,36 @@ export const ContactCard = ({ onClose, centered = false }: ContactCardProps) => 
   const [isMinimized, setIsMinimized] = useState(false);
   const cardWrapperRef = useRef<HTMLDivElement>(null);
 
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        const el = cardWrapperRef.current;
-        if (!el) return;
-        if (!el.contains(e.target as Node)) {
-          onClose && onClose();
-        }
-      }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.25, type: "spring", stiffness: 260, damping: 22 }}
+      className="fixed inset-0 z-50"
+      style={{ pointerEvents: 'auto' }}
     >
-      <div ref={cardWrapperRef}>
-        <CometCard className={`transition-all duration-300 ease-in-out ${centered ? '' : 'transform -translate-y-[50vh] md:-translate-y-[55vh]'} ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-64 h-[400px] md:w-80 md:h-[450px]'}`}>
+      {/* Invisible backdrop to capture outside clicks, no blur */}
+      <div className="absolute inset-0" />
+      <div ref={cardWrapperRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <CometCard className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-64 h-[400px] md:w-80 md:h-[450px]'}`}>
           <div className={`relative w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-emerald-900 rounded-2xl transition-all duration-300 ease-in-out ${isMinimized ? 'p-3 md:p-4' : 'p-4 md:p-6'} text-white overflow-hidden`}>
             
             {/* Minimized View */}
@@ -107,7 +120,7 @@ export const ContactCard = ({ onClose, centered = false }: ContactCardProps) => 
                     </div>
                     <div className="flex items-center space-x-3">
                       <span className="text-white/60 text-sm">✉️</span>
-                      <span className="text-white/90">selfzorojuro@gmail.com</span>
+                      <span className="text-white/90">myselfzorojuro@gmail.com</span>
                     </div>
                     <div className="text-center pt-2">
                       <p className="text-white/80 text-sm italic">contact lets build something cool</p>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CardContainer, CardBody, CardItem } from '@/components/ui/3d-card';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
@@ -9,26 +9,53 @@ interface Project1WindowProps {
 
 export const Project1Window = ({ onClose }: Project1WindowProps) => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const cardWrapperRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        const el = cardWrapperRef.current;
-        if (!el) return;
-        if (!el.contains(e.target as Node)) {
-          onClose && onClose();
-        }
-      }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.25, type: "spring", stiffness: 260, damping: 22 }}
+      className="fixed inset-0 z-50"
+      style={{ pointerEvents: 'auto' }}
     >
-      <div ref={cardWrapperRef}>
+      {/* Invisible backdrop to capture outside clicks, no blur */}
+      <div className="absolute inset-0" />
+      <div ref={cardWrapperRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <motion.div 
-          className={`transition-all duration-300 ease-in-out transform -translate-y-[30vh] md:-translate-y-[20vh] ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-72 h-[400px] md:w-[500px] md:h-[500px]'} bg-white rounded-lg shadow-2xl border border-gray-300`}
+          ref={dragRef}
+          drag={!isMinimized}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => {
+            if (isMinimized) return;
+            setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-72 h-[400px] md:w-[500px] md:h-[500px]'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+          style={{ x: position.x, y: position.y }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -61,19 +88,19 @@ export const Project1Window = ({ onClose }: Project1WindowProps) => {
             {!isMinimized && (
               <>
                 {/* macOS Title Bar */}
-                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg">
+                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg cursor-grab active:cursor-grabbing">
                   <div className="flex items-center space-x-2">
                     {/* Traffic Light Buttons */}
                     <button 
                       onClick={onClose}
-                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
+                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 active:bg-red-600 transition-colors"
                     ></button>
                     <button 
                       onClick={() => setIsMinimized(!isMinimized)}
-                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
+                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 active:bg-yellow-600 transition-colors"
                     ></button>
                     <button 
-                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
+                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 active:bg-green-600 transition-colors"
                     ></button>
                   </div>
                   <div className="text-sm font-medium text-gray-600">Portfolio</div>
@@ -81,7 +108,7 @@ export const Project1Window = ({ onClose }: Project1WindowProps) => {
                 </div>
 
                 {/* Window Content */}
-                <div className="p-6 h-full overflow-y-auto">
+                <div className="p-6 h-full overflow-y-auto scrollbar-hide">
                   {/* 3D Card Container - Inside the window */}
                   <CardContainer className="inter-var">
                     <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-full h-auto rounded-xl p-6 border">
@@ -98,7 +125,7 @@ export const Project1Window = ({ onClose }: Project1WindowProps) => {
                       <CardItem translateZ="100" className="w-full mb-4 md:mb-6">
                         <div className="flex justify-center">
                                                   <img
-                          src="/songs/project1.png"
+                          src="/songs/portfolio-preview.png"
                           alt="Portfolio Project"
                           className="h-32 w-full max-w-xs md:h-48 md:max-w-sm object-cover rounded-xl group-hover/card:shadow-xl"
                         />

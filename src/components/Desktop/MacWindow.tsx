@@ -69,13 +69,13 @@ export const MacWindow = ({
       }}
       className="fixed z-50 shadow-mac-window mac-window"
       style={{
+        zIndex: zIndex ?? 50,
         left: Math.max(0, Math.min(position.x, window.innerWidth - responsiveWidth)),
         top: Math.max(40, Math.min(position.y, window.innerHeight - responsiveHeight)),
         width: responsiveWidth,
         height: responsiveHeight
       }}
       onMouseDown={() => onFocus && onFocus()}
-      style={{ zIndex: zIndex ?? 50, left: Math.max(0, Math.min(position.x, window.innerWidth - responsiveWidth)), top: Math.max(40, Math.min(position.y, window.innerHeight - responsiveHeight)), width: responsiveWidth, height: responsiveHeight }}
     >
       <div className={`${showHeader ? 'bg-white/95 border border-gray-300 shadow-mac-window' : 'bg-transparent border-0 shadow-none'} backdrop-blur-md rounded-xl overflow-hidden`}>
         {showHeader && (

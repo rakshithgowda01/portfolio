@@ -1,7 +1,9 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "rakshith-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Rakshith's Interactive Portfolio - A modern macOS-inspired portfolio website built with React, TypeScript, and Tailwind CSS",
+  "homepage": "https://rakshithgowda01.github.io/portfolio",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -55,6 +57,7 @@
     "meshline": "^3.3.1",
     "motion": "^12.23.12",
     "next-themes": "^0.3.0",
+    "ogl": "^1.0.11",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
@@ -85,6 +88,7 @@
     "lovable-tagger": "^1.1.9",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "terser": "^5.44.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19"

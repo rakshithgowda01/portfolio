@@ -11,8 +11,11 @@ export const SpotifyPlayer = ({ onClose }: SpotifyPlayerProps) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(180);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const audioRef = useRef<HTMLAudioElement>(null);
   const cardWrapperRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
   const [showLogo, setShowLogo] = useState(false);
 
   // Motion values for 3D hover on album image
@@ -107,6 +110,23 @@ export const SpotifyPlayer = ({ onClose }: SpotifyPlayerProps) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
+
   const handlePlayPause = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -128,25 +148,49 @@ export const SpotifyPlayer = ({ onClose }: SpotifyPlayerProps) => {
     }
   };
 
-  
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        const el = cardWrapperRef.current;
-        if (!el) return;
-        if (!el.contains(e.target as Node)) {
-          onClose && onClose();
-        }
-      }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.25, type: "spring", stiffness: 260, damping: 22 }}
+      className="fixed inset-0 z-50"
+      style={{ pointerEvents: 'auto' }}
     >
-      <div ref={cardWrapperRef}>
-        <CometCard className={`transition-all duration-300 ease-in-out transform -translate-y-[60vh] md:-translate-y-[55vh] ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-64 h-[300px] md:w-80 md:h-[380px]'}`}>
+      {/* Invisible backdrop to capture outside clicks, no blur */}
+      <div className="absolute inset-0" />
+      <div ref={cardWrapperRef} className="absolute" style={{ left: 'calc(50% - 150px)', bottom: '300px' }}>
+        <CometCard 
+          ref={dragRef}
+          drag={!isMinimized}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => {
+            if (isMinimized) return;
+            setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-64 h-[300px] md:w-80 md:h-[380px]'} ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+          style={{ x: position.x, y: position.y }}
+        >
         <div onClick={() => setShowLogo(true)} className={`relative w-full h-full bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl transition-all duration-300 ease-in-out ${isMinimized ? 'p-3 md:p-4' : 'p-4 md:p-6'} text-white overflow-hidden`}>
           <audio ref={audioRef} preload="metadata" />
           {/* Background Pattern */}
@@ -196,25 +240,25 @@ export const SpotifyPlayer = ({ onClose }: SpotifyPlayerProps) => {
               {onClose && (
                 <button 
                   onClick={onClose}
-                  className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors flex items-center justify-center group"
+                  className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 active:bg-red-600 transition-colors flex items-center justify-center group"
                 >
-                  <span className="text-red-500 group-hover:text-red-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
+                  <span className="text-red-500 group-hover:text-red-600 group-active:text-red-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">✕</span>
                 </button>
               )}
               
               {/* Minimize Button (Yellow) */}
               <button 
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors flex items-center justify-center group"
+                className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 active:bg-yellow-600 transition-colors flex items-center justify-center group"
               >
-                <span className="text-yellow-500 group-hover:text-yellow-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">−</span>
+                <span className="text-yellow-500 group-hover:text-yellow-600 group-active:text-yellow-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">−</span>
               </button>
               
               {/* Maximize Button (Green) */}
               <button 
-                className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors flex items-center justify-center group"
+                className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 active:bg-green-600 transition-colors flex items-center justify-center group"
               >
-                <span className="text-green-500 group-hover:text-green-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">□</span>
+                <span className="text-green-500 group-hover:text-green-600 group-active:text-green-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">□</span>
               </button>
             </div>
           </div>

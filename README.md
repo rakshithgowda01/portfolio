@@ -1,73 +1,167 @@
-# Welcome to your Lovable project
+# 🚀 Rakshith's Interactive Portfolio
 
-## Project info
+A modern, interactive portfolio website inspired by macOS design principles. Built with React, TypeScript, Tailwind CSS, and Framer Motion for smooth animations.
 
-**URL**: https://lovable.dev/projects/0ab94fbc-f342-48c3-af66-043c425ef9e2
+## ✨ Features
 
-## How can I edit this code?
+- **macOS-inspired UI**: Desktop environment with dock, windows, and file system
+- **Interactive Components**: Drag-and-drop windows, animated transitions
+- **3D Photo Gallery**: WebGL-powered circular photo gallery using OGL
+- **Responsive Design**: Optimized for desktop and mobile devices
+- **Modern Tech Stack**: React 18, TypeScript, Vite, Tailwind CSS
+- **Smooth Animations**: Framer Motion for fluid user interactions
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18, TypeScript
+- **Styling**: Tailwind CSS, CSS Modules
+- **Animations**: Framer Motion
+- **3D Graphics**: OGL (WebGL library)
+- **Build Tool**: Vite
+- **UI Components**: Radix UI, Shadcn/ui
+- **Routing**: React Router DOM
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0ab94fbc-f342-48c3-af66-043c425ef9e2) and start prompting.
+## 🚀 Quick Start
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ 
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/rakshithgowda01/portfolio.git
+   cd portfolio
+   ```
 
-Follow these steps:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. **Open in browser**
+   ```
+   http://localhost:5173
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Build for Production
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## 📁 Project Structure
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+src/
+├── components/
+│   ├── Desktop/          # Desktop environment components
+│   │   ├── ContactCard.tsx
+│   │   ├── PhotoViewerWindow.tsx
+│   │   ├── Project1Window.tsx
+│   │   └── ...
+│   └── ui/               # Reusable UI components
+├── hooks/                # Custom React hooks
+├── pages/                # Page components
+└── lib/                  # Utility functions
+```
 
-**Use GitHub Codespaces**
+## 🎨 Components
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Desktop Environment
+- **Desktop Grid**: Main desktop layout with icons
+- **Mac Dock**: Bottom dock with app icons
+- **Windows**: Draggable, resizable windows
+- **Contact Card**: Interactive contact information
 
-## What technologies are used for this project?
+### Special Features
+- **3D Photo Gallery**: Circular WebGL gallery
+- **Project Showcases**: Interactive project windows
+- **Series & Anime**: Expandable content cards
+- **Spotify Player**: Music player integration
 
-This project is built with:
+## 🚀 Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Vercel (Recommended)
 
-## How can I deploy this project?
+1. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel will auto-detect Vite configuration
 
-Simply open [Lovable](https://lovable.dev/projects/0ab94fbc-f342-48c3-af66-043c425ef9e2) and click on Share -> Publish.
+2. **Deploy**
+   - Vercel will automatically build and deploy
+   - Your site will be available at `https://your-project.vercel.app`
 
-## Can I connect a custom domain to my Lovable project?
+### Netlify
 
-Yes, you can!
+1. **Build Command**: `npm run build`
+2. **Publish Directory**: `dist`
+3. **Deploy**: Connect your GitHub repository to Netlify
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### GitHub Pages
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy to GitHub Pages**:
+   ```bash
+   npm install -g gh-pages
+   gh-pages -d dist
+   ```
+
+## 🎯 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## 📱 Responsive Design
+
+The portfolio is fully responsive and optimized for:
+- **Desktop**: Full macOS experience
+- **Tablet**: Adapted layout with touch interactions
+- **Mobile**: Simplified interface with mobile-friendly navigation
+
+## 🎨 Customization
+
+### Adding New Projects
+1. Create a new component in `src/components/Desktop/`
+2. Add the project to `src/pages/Desktop.tsx`
+3. Update the desktop icons array
+
+### Styling
+- Uses Tailwind CSS for styling
+- Custom CSS in `src/index.css`
+- Component-specific styles in individual files
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 📧 Contact
+
+**Rakshith R**
+- Email: myselfzorojuro@gmail.com
+- GitHub: [@rakshithgowda01](https://github.com/rakshithgowda01)
+
+---
+
+⭐ **Star this repository if you found it helpful!**

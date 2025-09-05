@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CometCard } from '@/components/ui/comet-card';
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
@@ -10,26 +10,53 @@ interface Project2WindowProps {
 
 export const Project2Window = ({ onClose }: Project2WindowProps) => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const cardWrapperRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        const el = cardWrapperRef.current;
-        if (!el) return;
-        if (!el.contains(e.target as Node)) {
-          onClose && onClose();
-        }
-      }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.25, type: "spring", stiffness: 260, damping: 22 }}
+      className="fixed inset-0 z-50"
+      style={{ pointerEvents: 'auto' }}
     >
-      <div ref={cardWrapperRef}>
+      {/* Invisible backdrop to capture outside clicks, no blur */}
+      <div className="absolute inset-0" />
+      <div ref={cardWrapperRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <motion.div 
-          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-[94vw] max-w-[1080px]'} bg-white rounded-lg shadow-2xl border border-gray-300`}
+          ref={dragRef}
+          drag={!isMinimized}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => {
+            if (isMinimized) return;
+            setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-[94vw] max-w-[1080px]'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+          style={{ x: position.x, y: position.y }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -62,19 +89,19 @@ export const Project2Window = ({ onClose }: Project2WindowProps) => {
             {!isMinimized && (
               <>
                 {/* macOS Title Bar */}
-                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg">
+                <div className="bg-gray-100 border-b border-gray-300 px-4 py-2 flex items-center justify-between rounded-t-lg cursor-grab active:cursor-grabbing">
                   <div className="flex items-center space-x-2">
                     {/* Traffic Light Buttons */}
                     <button 
                       onClick={onClose}
-                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
+                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 active:bg-red-600 transition-colors"
                     ></button>
                     <button 
                       onClick={() => setIsMinimized(!isMinimized)}
-                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors"
+                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 active:bg-yellow-600 transition-colors"
                     ></button>
                     <button 
-                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors"
+                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 active:bg-green-600 transition-colors"
                     ></button>
                   </div>
                   <div className="text-sm font-medium text-gray-600">Portfolio - LUMIERE</div>
@@ -82,10 +109,10 @@ export const Project2Window = ({ onClose }: Project2WindowProps) => {
                 </div>
 
                 {/* Window Content */}
-                <div className="p-5 md:p-6 overflow-hidden flex flex-col gap-4">
+                <div className="p-5 md:p-6 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
                   <div>
-                    <TextGenerateEffect words="LUMIERE" className="text-2xl md:text-3xl font-bold tracking-wide" />
-                    <TextGenerateEffect words="Made a website landing page for a video editing and digital marketing agency." className="text-gray-600 mt-2" duration={2} />
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-black">LUMIERE</h1>
+                    <p className="text-gray-600 mt-2 text-sm md:text-base">Made a website landing page for a video editing and digital marketing agency.</p>
                   </div>
                   <div>
                     <CometCard className="w-full">

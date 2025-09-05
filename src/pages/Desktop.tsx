@@ -6,7 +6,8 @@ import { ContactCard } from '@/components/Desktop/ContactCard';
 import { WelcomeText } from '@/components/Desktop/WelcomeText';
 import { StickyNote } from '@/components/Desktop/StickyNote';
 import { DesktopIcon } from '@/components/Desktop/DesktopIcon';
-import { MacDock } from '@/components/Desktop/MacDock';
+// import { MacDock } from '@/components/Desktop/MacDock';
+import MacOSDock from '@/components/ui/mac-os-dock';
 import { MacWindow } from '@/components/Desktop/MacWindow';
 import ProfileCard from '@/components/Desktop/ProfileCard';
 import Lanyard from '@/components/Desktop/Lanyard';
@@ -15,10 +16,12 @@ import { Project2Window } from '@/components/Desktop/Project2Window';
 import { Project3Window } from '@/components/Desktop/Project3Window';
 import { Project4Window } from '@/components/Desktop/Project4Window';
 import { DontLookWindow } from '@/components/Desktop/DontLookWindow';
+import { PhotoViewerWindow } from '@/components/Desktop/PhotoViewerWindow';
 // About Me multi-window uses built-in MacWindow instances
 import { useDragSystem } from '@/hooks/useDragSystem';
 import { SmallSongCard } from '@/components/Desktop/SmallSongCard';
 import { CometCard } from '@/components/ui/comet-card';
+import { SpotifyPlayer } from '@/components/Desktop/SpotifyPlayer';
 
 const desktopIcons = [
   { id: 'resume', name: 'Resume.pdf', type: 'file' as const, x: 80, y: 600 },
@@ -44,6 +47,9 @@ export const Desktop = () => {
   const [showAboutPhotoRightTop, setShowAboutPhotoRightTop] = useState(false);
   const [showAboutPhotoLeftBottom, setShowAboutPhotoLeftBottom] = useState(false);
   const [showAboutSpotify, setShowAboutSpotify] = useState(false);
+  const [showSpotifyPlayer, setShowSpotifyPlayer] = useState(false);
+  const [showPhotos, setShowPhotos] = useState(false);
+  const [openDockApps, setOpenDockApps] = useState<string[]>(['finder', 'safari']);
   const [zCounter, setZCounter] = useState(60);
   const [zInfo, setZInfo] = useState(61);
   const [zRight, setZRight] = useState(62);
@@ -199,6 +205,31 @@ export const Desktop = () => {
     }
   };
 
+  // Dock apps list (includes your requested macOS-style apps + spotify)
+  const dockApps = [
+    { id: 'finder', name: 'Finder', icon: '/icons/finder.png' },
+    { id: 'calculator', name: 'Calculator', icon: '/icons/calculator.png' },
+    { id: 'terminal', name: 'Terminal', icon: '/icons/terminal.png' },
+    { id: 'mail', name: 'Contact', icon: '/icons/mail.png' },
+    { id: 'notes', name: 'Notes', icon: '/icons/notes.png' },
+    { id: 'safari', name: 'Safari', icon: '/icons/safari.png' },
+    { id: 'photos', name: 'Photos', icon: '/icons/photos.png' },
+    { id: 'netflix', name: 'Netflix', icon: '/icons/netflix.png' },
+    { id: 'spotify', name: 'Spotify', icon: '/icons/spotify.png' },
+  ];
+
+  const handleDockAppClick = (appId: string) => {
+    if (appId === 'spotify') {
+      setShowSpotifyPlayer(prev => !prev);
+    } else if (appId === 'mail') {
+      setShowTopContact(true);
+    } else if (appId === 'photos') {
+      setShowPhotos(prev => !prev);
+    }
+    // Toggle indicator dot state
+    setOpenDockApps(prev => prev.includes(appId) ? prev.filter(id => id !== appId) : [...prev, appId]);
+  };
+
   return (
     <div className="font-inter min-h-screen overflow-hidden" ref={desktopRef}>
       <TopNavBar onContact={() => setShowTopContact(true)} />
@@ -207,7 +238,7 @@ export const Desktop = () => {
         {/* Welcome Text */}
         <WelcomeText />
         
-        {/* Sticky Note (hidden on mobile) */}
+        {/* Sticky Note (desktop only) */}
         <div className="hidden md:block">
           <StickyNote />
         </div>
@@ -331,6 +362,16 @@ export const Desktop = () => {
           <DontLookWindow onClose={() => setShowDontLook(false)} />
         )}
 
+        {/* Photos Window */}
+        {showPhotos && (
+          <PhotoViewerWindow 
+            onClose={() => setShowPhotos(false)} 
+            imageSrc="/songs/photo1.jpg"
+            title="Photos"
+            position="left"
+          />
+        )}
+
         {/* About Me - Right Top Photo (1:1) */}
         {showAboutPhotoRightTop && (
           <MacWindow
@@ -429,7 +470,24 @@ export const Desktop = () => {
       </DesktopGrid>
 
       {/* Dock */}
-      <MacDock />
+      <div className="fixed left-1/2 -translate-x-1/2 z-40" style={{ bottom: 'max(16px, env(safe-area-inset-bottom) + 8px)' }}>
+        <MacOSDock
+          apps={dockApps.filter(app => {
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+              // On mobile, remove notes and terminal
+              return !['notes', 'terminal'].includes(app.id);
+            }
+            return true;
+          })}
+          onAppClick={handleDockAppClick}
+          openApps={openDockApps}
+        />
+      </div>
+
+      {/* Spotify Player Overlay */}
+      {showSpotifyPlayer && (
+        <SpotifyPlayer onClose={() => setShowSpotifyPlayer(false)} />
+      )}
 
       {/* Top Contact overlay */}
       {showTopContact && (

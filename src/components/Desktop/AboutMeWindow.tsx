@@ -8,7 +8,27 @@ interface AboutMeWindowProps {
 
 export const AboutMeWindow = ({ onClose }: AboutMeWindowProps) => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const cardWrapperRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside the card
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const el = cardWrapperRef.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) {
+        onClose && onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('touchstart', handleOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('touchstart', handleOutside as any);
+    };
+  }, [onClose]);
 
   return (
     <motion.div
@@ -16,7 +36,7 @@ export const AboutMeWindow = ({ onClose }: AboutMeWindowProps) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.3, type: "spring" }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50"
       onMouseDown={(e) => {
         const el = cardWrapperRef.current;
         if (!el) return;
@@ -26,7 +46,20 @@ export const AboutMeWindow = ({ onClose }: AboutMeWindowProps) => {
       }}
     >
       <div ref={cardWrapperRef}>
-        <CometCard className={`transition-all duration-300 ease-in-out transform -translate-y-[20vh] ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-80 h-[400px] md:w-[500px] md:h-[500px]'}`}>
+        <CometCard 
+          ref={dragRef}
+          drag={!isMinimized}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => {
+            if (isMinimized) return;
+            setPosition({ x: position.x + info.delta.x, y: position.y + info.delta.y });
+          }}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          className={`transition-all duration-300 ease-in-out ${isMinimized ? 'w-64 h-16 md:w-80 md:h-20' : 'w-80 h-[400px] md:w-[500px] md:h-[500px]'} ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+          style={{ x: position.x, y: position.y }}
+        >
           <div className={`relative w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-emerald-900 rounded-2xl transition-all duration-300 ease-in-out ${isMinimized ? 'p-3 md:p-4' : 'p-4 md:p-6'} text-white overflow-hidden`}>
             
             {/* Minimized View */}
@@ -67,24 +100,24 @@ export const AboutMeWindow = ({ onClose }: AboutMeWindowProps) => {
                     {/* Close Button (Red) */}
                     <button 
                       onClick={onClose}
-                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors flex items-center justify-center group"
+                      className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 active:bg-red-600 transition-colors flex items-center justify-center group"
                     >
-                      <span className="text-red-500 group-hover:text-red-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
+                      <span className="text-red-500 group-hover:text-red-600 group-active:text-red-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">✕</span>
                     </button>
                     
                     {/* Minimize Button (Yellow) */}
                     <button 
                       onClick={() => setIsMinimized(!isMinimized)}
-                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 transition-colors flex items-center justify-center group"
+                      className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 active:bg-yellow-600 transition-colors flex items-center justify-center group"
                     >
-                      <span className="text-yellow-500 group-hover:text-yellow-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">−</span>
+                      <span className="text-yellow-500 group-hover:text-yellow-600 group-active:text-yellow-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">−</span>
                     </button>
                     
                     {/* Maximize Button (Green) */}
                     <button 
-                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 transition-colors flex items-center justify-center group"
+                      className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 active:bg-green-600 transition-colors flex items-center justify-center group"
                     >
-                      <span className="text-green-500 group-hover:text-green-600 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">□</span>
+                      <span className="text-green-500 group-hover:text-green-600 group-active:text-green-600 text-xs font-bold opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">□</span>
                     </button>
                   </div>
                 </div>

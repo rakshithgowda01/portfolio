@@ -58,6 +58,8 @@ export const WelcomeText = () => {
           }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
+          onTouchStart={() => setIsHovering(true)}
+          onTouchEnd={() => setIsHovering(false)}
           animate={{
             scale: isHovering ? 1.1 : 1,
             rotateX: isHovering ? 5 : 0,
