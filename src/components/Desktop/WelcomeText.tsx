@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import VariableProximity from './VariableProximity';
 
 export const WelcomeText = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,14 +30,23 @@ export const WelcomeText = () => {
       transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
       className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0"
     >
-      <motion.p
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-        className="text-base md:text-lg text-gray-600 font-light tracking-wide mb-2 text-center"
+        className="mb-2 text-center"
       >
-        welcome to my
-      </motion.p>
+        <h3 className="text-2xl md:text-4xl text-gray-900 font-bold">
+          <VariableProximity
+            label="welcome to my"
+            fromFontVariationSettings="'wght' 600, 'wdth' 100"
+            toFontVariationSettings="'wght' 900, 'wdth' 115"
+            containerRef={containerRef}
+            radius={120}
+            falloff="gaussian"
+          />
+        </h3>
+      </motion.div>
       
       <div className="pointer-events-auto">
         <motion.div

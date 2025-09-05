@@ -141,22 +141,24 @@ export const MacDock = () => {
                 </motion.button>
 
                 
-                {/* Tooltip */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                  animate={{
-                    opacity: hoveredItem === item.id ? 1 : 0,
-                    y: hoveredItem === item.id ? -50 : -40,
-                    scale: hoveredItem === item.id ? 1 : 0.8
-                  }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 pointer-events-none z-50"
-                >
-                  <div className="bg-gray-900/90 text-white text-xs px-3 py-1 rounded-lg backdrop-blur-sm whitespace-nowrap shadow-lg border border-white/10">
-                    {item.label}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900/90"></div>
-                  </div>
-                </motion.div>
+                {/* Tooltip (hidden for finder, calendar, settings, files, trash) */}
+                {!["finder","calendar","settings","files","trash"].includes(item.id) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                    animate={{
+                      opacity: hoveredItem === item.id ? 1 : 0,
+                      y: hoveredItem === item.id ? -50 : -40,
+                      scale: hoveredItem === item.id ? 1 : 0.8
+                    }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 pointer-events-none z-50"
+                  >
+                    <div className="bg-gray-900/90 text-white text-xs px-3 py-1 rounded-lg backdrop-blur-sm whitespace-nowrap shadow-lg border border-white/10">
+                      {item.label}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900/90"></div>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             );
           })}

@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import { Wifi, Battery } from 'lucide-react';
 
-export const TopNavBar = () => {
+interface TopNavBarProps {
+  onContact?: () => void;
+}
+
+export const TopNavBar = ({ onContact }: TopNavBarProps) => {
   return (
     <motion.div
       initial={{ y: -28, opacity: 0 }}
@@ -12,11 +16,11 @@ export const TopNavBar = () => {
       <div className="h-full flex items-center justify-between px-2 md:px-4 text-xs md:text-sm">
         {/* Left Side */}
         <div className="flex items-center gap-2 md:gap-6 text-gray-800">
-          <span className="font-medium text-xs md:text-sm truncate">RAKSHITH'S PORTFOLIO</span>
-          <button className="hover:text-gray-600 transition-colors text-xs md:text-sm hidden md:inline">
+          <span className="font-medium text-xs md:text-sm truncate hover:underline cursor-default">RAKSHITH'S PORTFOLIO</span>
+          <button onClick={onContact} className="hover:underline hover:text-gray-800 transition-colors text-xs md:text-sm hidden md:inline">
             CONTACT
           </button>
-          <button className="hover:text-gray-600 transition-colors text-xs md:text-sm hidden md:inline">
+          <button className="hover:underline hover:text-gray-800 transition-colors text-xs md:text-sm hidden md:inline">
             RESUME
           </button>
         </div>

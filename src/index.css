@@ -81,6 +81,14 @@
     --bounce-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --smooth-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
     
+    /* Navy Blue-Green Theme */
+    --navy-primary: 220 40% 20%;
+    --navy-secondary: 220 35% 25%;
+    --emerald-accent: 160 60% 45%;
+    --emerald-light: 160 50% 60%;
+    --slate-dark: 220 25% 15%;
+    --slate-medium: 220 20% 25%;
+    
     /* Legacy compatibility */
     --background: var(--desktop-bg);
     --foreground: var(--mac-text);

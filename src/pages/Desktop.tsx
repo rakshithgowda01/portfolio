@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { DesktopGrid } from '@/components/Desktop/DesktopGrid';
 import { TopNavBar } from '@/components/Desktop/TopNavBar';
+import { ContactCard } from '@/components/Desktop/ContactCard';
 import { WelcomeText } from '@/components/Desktop/WelcomeText';
 import { StickyNote } from '@/components/Desktop/StickyNote';
 import { DesktopIcon } from '@/components/Desktop/DesktopIcon';
@@ -14,15 +15,18 @@ import { Project2Window } from '@/components/Desktop/Project2Window';
 import { Project3Window } from '@/components/Desktop/Project3Window';
 import { Project4Window } from '@/components/Desktop/Project4Window';
 import { DontLookWindow } from '@/components/Desktop/DontLookWindow';
+// About Me multi-window uses built-in MacWindow instances
 import { useDragSystem } from '@/hooks/useDragSystem';
+import { SmallSongCard } from '@/components/Desktop/SmallSongCard';
+import { CometCard } from '@/components/ui/comet-card';
 
 const desktopIcons = [
   { id: 'resume', name: 'Resume.pdf', type: 'file' as const, x: 80, y: 600 },
   { id: 'about', name: 'About Me', type: 'folder' as const, x: 80, y: 500 },
   { id: 'project1', name: 'Portfolio', type: 'folder' as const, x: 900, y: 150 },
-  { id: 'project2', name: 'Project 02\n(Simplinno)', type: 'folder' as const, x: 950, y: 250 },
+  { id: 'project2', name: 'Project 02\n(Lumiere)', type: 'folder' as const, x: 950, y: 250 },
   { id: 'project3', name: 'Project 03\n(Leafpress)', type: 'folder' as const, x: 1150, y: 400 },
-  { id: 'project4', name: 'Project 04\n(Amazon)', type: 'folder' as const, x: 900, y: 500 },
+  { id: 'project4', name: 'Crazy Projects', type: 'folder' as const, x: 900, y: 500 },
   { id: 'profile', name: "Don't Look", type: 'app' as const, x: 1150, y: 600 },
 ];
 
@@ -35,6 +39,16 @@ export const Desktop = () => {
   const [showProject3, setShowProject3] = useState(false);
   const [showProject4, setShowProject4] = useState(false);
   const [showDontLook, setShowDontLook] = useState(false);
+  const [showTopContact, setShowTopContact] = useState(false);
+  const [showAboutMeInfo, setShowAboutMeInfo] = useState(false);
+  const [showAboutPhotoRightTop, setShowAboutPhotoRightTop] = useState(false);
+  const [showAboutPhotoLeftBottom, setShowAboutPhotoLeftBottom] = useState(false);
+  const [showAboutSpotify, setShowAboutSpotify] = useState(false);
+  const [zCounter, setZCounter] = useState(60);
+  const [zInfo, setZInfo] = useState(61);
+  const [zRight, setZRight] = useState(62);
+  const [zLeft, setZLeft] = useState(63);
+  const [zSong, setZSong] = useState(64);
   const { updateItemPosition } = useDragSystem();
   const desktopRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +64,13 @@ export const Desktop = () => {
 
   const handleIconDoubleClick = (iconId: string) => {
     if (iconId === 'about') {
-      setShowProfileCard(true);
+      // Open 4 separate About Me windows
+      setShowAboutMeInfo(true);
+      setShowAboutPhotoRightTop(true);
+      setShowAboutPhotoLeftBottom(true);
+      setShowAboutSpotify(true);
+      // Close other windows
+      setShowProfileCard(false);
       setShowLanyard(false);
       setShowProject1(false);
       setShowProject2(false);
@@ -110,6 +130,11 @@ export const Desktop = () => {
     setShowLanyard(false);
   };
 
+  const closeAboutMeInfo = () => setShowAboutMeInfo(false);
+  const closeAboutPhotoRightTop = () => setShowAboutPhotoRightTop(false);
+  const closeAboutPhotoLeftBottom = () => setShowAboutPhotoLeftBottom(false);
+  const closeAboutSpotify = () => setShowAboutSpotify(false);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -122,6 +147,10 @@ export const Desktop = () => {
         setOpenWindows([]);
         setShowProfileCard(false);
         setShowLanyard(false);
+        setShowAboutMeInfo(false);
+        setShowAboutPhotoRightTop(false);
+        setShowAboutPhotoLeftBottom(false);
+        setShowAboutSpotify(false);
       }
     };
 
@@ -172,7 +201,7 @@ export const Desktop = () => {
 
   return (
     <div className="font-inter min-h-screen overflow-hidden" ref={desktopRef}>
-      <TopNavBar />
+      <TopNavBar onContact={() => setShowTopContact(true)} />
       
       <DesktopGrid className="desktop-grid">
         {/* Welcome Text */}
@@ -301,10 +330,111 @@ export const Desktop = () => {
         {showDontLook && (
           <DontLookWindow onClose={() => setShowDontLook(false)} />
         )}
+
+        {/* About Me - Right Top Photo (1:1) */}
+        {showAboutPhotoRightTop && (
+          <MacWindow
+            title="IMG_0001.heic"
+            isOpen={true}
+            onClose={closeAboutPhotoRightTop}
+            width={typeof window !== 'undefined' && window.innerWidth < 768 ? 220 : 300}
+            height={typeof window !== 'undefined' && window.innerWidth < 768 ? 220 : 300}
+            initialX={typeof window !== 'undefined' ? Math.max(16, window.innerWidth - (typeof window !== 'undefined' && window.innerWidth < 768 ? 260 : 360)) : 900}
+            initialY={typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 90}
+            zIndex={zRight}
+            onFocus={() => { const nz = zCounter + 1; setZCounter(nz); setZRight(nz); }}
+            contentOverflow="hidden"
+          >
+            <CometCard className="w-full h-full">
+              <div className="w-full h-full overflow-hidden rounded-md">
+                <img src="/songs/photo2.jpg" alt="About Right" className="w-full h-full object-cover" />
+              </div>
+            </CometCard>
+          </MacWindow>
+        )}
+
+        {/* About Me - Left Bottom Photo (1:1) */}
+        {showAboutPhotoLeftBottom && (
+          <MacWindow
+            title="IMG_0002.heic"
+            isOpen={true}
+            onClose={closeAboutPhotoLeftBottom}
+            width={typeof window !== 'undefined' && window.innerWidth < 768 ? 220 : 300}
+            height={typeof window !== 'undefined' && window.innerWidth < 768 ? 220 : 300}
+            initialX={typeof window !== 'undefined' && window.innerWidth < 768 ? 16 : 60}
+            initialY={typeof window !== 'undefined' ? Math.max(80, window.innerHeight - (typeof window !== 'undefined' && window.innerWidth < 768 ? 320 : 420)) : 420}
+            zIndex={zLeft}
+            onFocus={() => { const nz = zCounter + 1; setZCounter(nz); setZLeft(nz); }}
+            contentOverflow="hidden"
+          >
+            <CometCard className="w-full h-full">
+              <div className="w-full h-full overflow-hidden rounded-md">
+                <img src="/songs/photo1.jpg" alt="About Left" className="w-full h-full object-cover" />
+              </div>
+            </CometCard>
+          </MacWindow>
+        )}
+
+        {/* About Me - Small Song Card */}
+        {showAboutSpotify && (
+          <MacWindow
+            title=""
+            isOpen={true}
+            onClose={closeAboutSpotify}
+            width={typeof window !== 'undefined' && window.innerWidth < 768 ? 320 : 420}
+            height={typeof window !== 'undefined' && window.innerWidth < 768 ? 180 : 220}
+            initialX={typeof window !== 'undefined' ? Math.max(16, window.innerWidth - (typeof window !== 'undefined' && window.innerWidth < 768 ? 360 : 500)) : 800}
+            initialY={typeof window !== 'undefined' ? Math.max(80, window.innerHeight - (typeof window !== 'undefined' && window.innerWidth < 768 ? 280 : 360)) : 520}
+            showHeader={false}
+            zIndex={zSong}
+            onFocus={() => { const nz = zCounter + 1; setZCounter(nz); setZSong(nz); }}
+            contentOverflow="hidden"
+          >
+            <div className="w-full h-full p-2">
+              <CometCard className="w-full h-full">
+                <SmallSongCard />
+              </CometCard>
+            </div>
+          </MacWindow>
+        )}
+
+        {/* About Me - Info Center Window (render last to be on top) */}
+        {showAboutMeInfo && (
+          <MacWindow
+            title="aboutme.txt"
+            isOpen={true}
+            onClose={closeAboutMeInfo}
+            width={typeof window !== 'undefined' ? (window.innerWidth < 1024 ? Math.min(window.innerWidth - 80, 720) : 560) : 560}
+            height={typeof window !== 'undefined' ? (window.innerWidth < 1024 ? Math.min(window.innerHeight - 160, 520) : 420) : 420}
+            initialX={typeof window !== 'undefined' ? Math.max(40, window.innerWidth / 2 - ((window.innerWidth < 1024 ? Math.min(window.innerWidth - 80, 720) : 560) / 2)) : 120}
+            initialY={typeof window !== 'undefined' && window.innerWidth < 768 ? 60 : 120}
+            zIndex={zInfo}
+            onFocus={() => { const nz = zCounter + 1; setZCounter(nz); setZInfo(nz); }}
+          >
+            <div className="h-full overflow-auto pb-2">
+              <div className="space-y-4 text-gray-800">
+                <p className="text-base md:text-lg">
+                  Hi, I’m Rakshith R — a creative mind who loves building websites and landing pages with clean design, cool UI, and smooth animations. I’m also exploring AI SaaS, cybersecurity, and a touch of design, always learning and experimenting to push ideas into reality. My long-term goal is to build something big or work remotely in NYC while exploring the world.
+                </p>
+                <div className="text-base md:text-lg">
+                  <p className="font-semibold mb-1">🎓 Education</p>
+                  <p>
+                    I’m currently pursuing my BCA at Gopalan College in Bangalore. Alongside academics, I focus on hands-on projects that combine creativity, technology, and problem-solving.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </MacWindow>
+        )}
       </DesktopGrid>
 
       {/* Dock */}
       <MacDock />
+
+      {/* Top Contact overlay */}
+      {showTopContact && (
+        <ContactCard centered onClose={() => setShowTopContact(false)} />
+      )}
     </div>
   );
 };

@@ -1,32 +1,37 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls } from 'framer-motion';
 import { useState } from 'react';
 
 export const StickyNote = () => {
-  const [position, setPosition] = useState({ x: 32, y: 60 });
+  const [position] = useState({ x: 32, y: 60 });
   const [isDragging, setIsDragging] = useState(false);
+  const controls = useAnimationControls();
 
   const todoItems = [
-    "Land my dream UX job",
-    "Drink water",
-    "Stop doom scrolling",
-    "Finish grad school without losing my mind",
-    "Build that banger spotify playlist",
-    "World domination",
-    "Get really good at making pasta",
-    "Travel somewhere new every year"
+    "🥗 Maintain a healthy diet & join gym and stay consistent",
+    "🌆 Work in NYC and experience the city life",
+    "🌍 Build a career that allows me to work remotely across countries",
+    "🎵 Curate and grow that banger Spotify playlist",
   ];
 
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: -20, rotate: -1 }}
-      animate={{ opacity: 1, y: 0, rotate: -1 }}
+      animate={controls}
       transition={{ duration: 0.8, delay: 0.3, type: "spring", stiffness: 300 }}
-      className="absolute w-48 md:w-64 bg-yellow-200 rounded-sm shadow-md select-none z-30 sticky-note"
+      className={`absolute w-48 md:w-64 bg-yellow-200 rounded-sm shadow-md select-none z-30 sticky-note ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
       style={{
         left: position.x,
         top: position.y,
         boxShadow: '4px 4px 12px rgba(180, 180, 120, 0.3)',
+      }}
+      drag
+      dragElastic={0.15}
+      dragMomentum={false}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setIsDragging(false);
+        controls.start({ x: 0, y: 0, rotate: -1, opacity: 1, transition: { type: 'spring', stiffness: 450, damping: 32 } });
       }}
     >
       <div className="p-3 md:p-4">
@@ -37,9 +42,7 @@ export const StickyNote = () => {
           {todoItems.map((item, index) => (
             <li
               key={index}
-              className={`leading-relaxed ${
-                index === 6 ? 'line-through opacity-60' : ''
-              }`}
+              className="leading-relaxed"
             >
               {item}
             </li>

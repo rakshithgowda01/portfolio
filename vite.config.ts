@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     allowedHosts: [
-      "188140a3a22e.ngrok-free.app",
+      "188140a3a22e.ngrok-free.app", "c424ea6888a6.ngrok-free.app",
     ],
   },
   plugins: [
