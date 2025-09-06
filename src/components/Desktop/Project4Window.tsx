@@ -108,70 +108,126 @@ export const Project4Window = ({ onClose }: Project4WindowProps) => {
                 {/* Window Content */}
                 <div className="p-6 h-full overflow-y-auto scrollbar-hide">
                   <div className="space-y-8">
-                    {/* Project 1 */}
+                    {/* Project 1 - XSS Demo Lab */}
                     <div>
                       <h1 className="text-3xl md:text-4xl font-semibold text-black mb-4">
                         Crazy Projects —<br />
-                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">Scroll Animations</span>
+                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">XSS Demo Lab</span>
                       </h1>
                       <div>
-                        <img
-                          src={'/songs/lumiere1.png'}
-                          alt="hero"
-                          height={720}
-                          width={1400}
-                          className="mx-auto rounded-2xl object-cover h-full object-center"
-                          draggable={false}
-                        />
-                        <p className="text-sm md:text-base text-gray-700 mt-3 px-2">
-                          A playful exploration combining parallax motion and sticky titles to showcase interactive branding moments. Built to test scroll-linked animation performance and layout responsiveness.
-                        </p>
+                        <div className="bg-gradient-to-br from-red-50 to-orange-50 p-6 rounded-2xl border border-red-200 mb-4">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-lg">XSS</span>
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-bold text-gray-800">XSS Demo Lab</h3>
+                              <p className="text-sm text-gray-600">Educational Security Testing Platform</p>
+                            </div>
+                          </div>
+                          <p className="text-sm md:text-base text-gray-700 mb-4">
+                            An AI-powered educational platform for learning Cross-Site Scripting (XSS) vulnerabilities and web defacement techniques. 
+                            Features 30+ educational XSS payloads, 12+ creative defacement templates, and a safe environment for security professionals to understand web security concepts.
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">React 18</span>
+                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">TypeScript</span>
+                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Tailwind CSS</span>
+                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Security Education</span>
+                          </div>
+                          <div className="flex gap-3">
+                            <a 
+                              href="https://github.com/rakshithgowda01/xss-demo-lab-rgcodebreak" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
+                            >
+                              View on GitHub
+                            </a>
+                            <a 
+                              href="https://xss-demo-lab-rgcodebreak.lovable.app/" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium"
+                            >
+                              Live Demo
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     
                     <hr className="border-gray-200" />
                     
-                    {/* Project 2 */}
+                    {/* Project 2 - SocialSync */}
                     <div>
                       <h1 className="text-3xl md:text-4xl font-semibold text-black mb-4">
-                        LUMIERE —<br />
-                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">Project Showcase</span>
+                        SocialSync —<br />
+                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">Multi-Posting Platform</span>
                       </h1>
                       <div>
-                        <img
-                          src={'/songs/lumiere2.png'}
-                          alt="lumiere"
-                          height={720}
-                          width={1400}
-                          className="mx-auto rounded-2xl object-cover h-full object-center"
-                          draggable={false}
-                        />
-                        <p className="text-sm md:text-base text-gray-700 mt-3 px-2">
-                          Landing page concepts for a video editing and digital marketing studio. Focused on bold typography, clean sections, and fast content reveal as users scroll.
-                        </p>
+                        <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl border border-blue-200 mb-4">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-lg">SS</span>
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-bold text-gray-800">SocialSync</h3>
+                              <p className="text-sm text-gray-600">Multi-Platform Social Media Manager</p>
+                            </div>
+                          </div>
+                          <p className="text-sm md:text-base text-gray-700 mb-4">
+                            A comprehensive social media management platform that allows users to post content across multiple platforms with a single click. 
+                            Features AI-powered caption generation, OAuth integration for secure social media connections, and a modern full-stack architecture with PostgreSQL database.
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">React</span>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Express.js</span>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">PostgreSQL</span>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">OAuth 2.0</span>
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">OpenAI GPT-4o</span>
+                          </div>
+                          <div className="flex gap-3">
+                            <a 
+                              href="https://github.com/rakshithgowda01/socialsync" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+                            >
+                              View on GitHub
+                            </a>
+                            <span className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium">
+                              90% Complete
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     
                     <hr className="border-gray-200" />
                     
-                    {/* Project 3 */}
+                    {/* Project 3 - Coming Soon */}
                     <div>
                       <h1 className="text-3xl md:text-4xl font-semibold text-black mb-4">
-                        Concept —<br />
-                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">Third Project</span>
+                        More Projects —<br />
+                        <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none">Coming Soon</span>
                       </h1>
                       <div>
-                        <img
-                          src={'/songs/lumiere3.png'}
-                          alt="concept"
-                          height={720}
-                          width={1400}
-                          className="mx-auto rounded-2xl object-cover h-full object-center"
-                          draggable={false}
-                        />
-                        <p className="text-sm md:text-base text-gray-700 mt-3 px-2">
-                          Experimental visuals with smooth scroll effects and layered transitions. Designed to test component reusability and animation timing.
-                        </p>
+                        <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-200 mb-4">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-12 h-12 bg-gray-400 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-lg">?</span>
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-bold text-gray-800">More Crazy Projects</h3>
+                              <p className="text-sm text-gray-600">Stay tuned for more innovative projects</p>
+                            </div>
+                          </div>
+                          <p className="text-sm md:text-base text-gray-700">
+                            Working on more exciting projects that push the boundaries of web development, 
+                            security research, and creative problem-solving. Check back soon for updates!
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

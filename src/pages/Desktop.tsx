@@ -22,6 +22,7 @@ import { useDragSystem } from '@/hooks/useDragSystem';
 import { SmallSongCard } from '@/components/Desktop/SmallSongCard';
 import { CometCard } from '@/components/ui/comet-card';
 import { SpotifyPlayer } from '@/components/Desktop/SpotifyPlayer';
+import { FinderWindow } from '@/components/Desktop/FinderWindow';
 
 const desktopIcons = [
   { id: 'resume', name: 'Resume.pdf', type: 'file' as const, x: 80, y: 600 },
@@ -49,6 +50,7 @@ export const Desktop = () => {
   const [showAboutSpotify, setShowAboutSpotify] = useState(false);
   const [showSpotifyPlayer, setShowSpotifyPlayer] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
+  const [showFinder, setShowFinder] = useState(false);
   const [openDockApps, setOpenDockApps] = useState<string[]>(['finder', 'safari']);
   const [zCounter, setZCounter] = useState(60);
   const [zInfo, setZInfo] = useState(61);
@@ -225,6 +227,8 @@ export const Desktop = () => {
       setShowTopContact(true);
     } else if (appId === 'photos') {
       setShowPhotos(prev => !prev);
+    } else if (appId === 'finder') {
+      setShowFinder(prev => !prev);
     }
     // Toggle indicator dot state
     setOpenDockApps(prev => prev.includes(appId) ? prev.filter(id => id !== appId) : [...prev, appId]);
@@ -487,6 +491,11 @@ export const Desktop = () => {
       {/* Spotify Player Overlay */}
       {showSpotifyPlayer && (
         <SpotifyPlayer onClose={() => setShowSpotifyPlayer(false)} />
+      )}
+
+      {/* Finder Window Overlay */}
+      {showFinder && (
+        <FinderWindow onClose={() => setShowFinder(false)} />
       )}
 
       {/* Top Contact overlay */}

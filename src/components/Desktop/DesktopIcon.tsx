@@ -47,7 +47,7 @@ export const DesktopIcon = ({
         return (
           <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center">
             <img
-              src={`/icons/${id}.png`}
+              src={id === 'about' ? `/icons/${id}.png` : "/icons/folder.png"}
               alt={name}
               className="w-full h-full object-cover"
               loading="lazy"

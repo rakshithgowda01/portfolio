@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: '127.0.0.1',
     port: 5173,
     allowedHosts: [
-      '8ab6d76a8fb5.ngrok-free.app',
+      '8ab6d76a8fb5.ngrok-free.app','2440445e5150.ngrok-free.app',
     ],
   },
   plugins: [

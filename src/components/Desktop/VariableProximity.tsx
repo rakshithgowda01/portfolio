@@ -1,6 +1,7 @@
 import { forwardRef, useMemo, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './VariableProximity.css';
+import './VariableProximitySerif.css';
 
 function useAnimationFrame(callback: () => void) {
   useEffect(() => {
@@ -160,7 +161,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
   return (
     <span
       ref={ref}
-      className={`${className} variable-proximity`}
+      className={`${className} variable-proximity-serif`}
       onClick={onClick}
       style={{ display: 'inline', ...style }}
       {...restProps}
