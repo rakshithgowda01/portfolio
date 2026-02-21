@@ -23,6 +23,7 @@ import { SmallSongCard } from '@/components/Desktop/SmallSongCard';
 import { CometCard } from '@/components/ui/comet-card';
 import { SpotifyPlayer } from '@/components/Desktop/SpotifyPlayer';
 import { FinderWindow } from '@/components/Desktop/FinderWindow';
+import { TerminalWindow } from '@/components/Desktop/TerminalWindow';
 
 const desktopIcons = [
   { id: 'resume', name: 'Resume.pdf', type: 'file' as const, x: 80, y: 600 },
@@ -51,6 +52,7 @@ export const Desktop = () => {
   const [showSpotifyPlayer, setShowSpotifyPlayer] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
   const [showFinder, setShowFinder] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
   const [openDockApps, setOpenDockApps] = useState<string[]>(['finder', 'safari']);
   const [zCounter, setZCounter] = useState(60);
   const [zInfo, setZInfo] = useState(61);
@@ -229,6 +231,8 @@ export const Desktop = () => {
       setShowPhotos(prev => !prev);
     } else if (appId === 'finder') {
       setShowFinder(prev => !prev);
+    } else if (appId === 'terminal') {
+      setShowTerminal(prev => !prev);
     }
     // Toggle indicator dot state
     setOpenDockApps(prev => prev.includes(appId) ? prev.filter(id => id !== appId) : [...prev, appId]);
@@ -478,8 +482,8 @@ export const Desktop = () => {
         <MacOSDock
           apps={dockApps.filter(app => {
             if (typeof window !== 'undefined' && window.innerWidth < 768) {
-              // On mobile, remove notes and terminal
-              return !['notes', 'terminal'].includes(app.id);
+              // On mobile, remove notes only (terminal works on all devices)
+              return app.id !== 'notes';
             }
             return true;
           })}
@@ -496,6 +500,16 @@ export const Desktop = () => {
       {/* Finder Window Overlay */}
       {showFinder && (
         <FinderWindow onClose={() => setShowFinder(false)} />
+      )}
+
+      {/* Terminal Window Overlay */}
+      {showTerminal && (
+        <TerminalWindow
+          onClose={() => {
+            setShowTerminal(false);
+            setOpenDockApps(prev => prev.filter(id => id !== 'terminal'));
+          }}
+        />
       )}
 
       {/* Top Contact overlay */}
